@@ -1,0 +1,11 @@
+name: Warp
+version: '${project.version}'
+main: com.clarence.warp.Warp
+api-version: 1.16
+commands:
+  delwarp:
+    description: Deletes the warp that you indicate.
+  setwarp:
+    description: Set a warp with the following name.
+  warp:
+    description: Warp to a pre define warp name.
