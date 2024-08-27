@@ -1,19 +1,25 @@
 package com.clarence.warp;
 
 import com.clarence.ToolHelper.Configuration;
+import com.clarence.ToolHelper.InventoryHelper;
 import com.clarence.ToolHelper.Util;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
+import com.technicjelle.UpdateChecker;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class WarpCommand implements CommandExecutor {
+    private UpdateChecker updateChecker = null;
+    private Warp warp = null;
+
+    public WarpCommand(Warp warp, UpdateChecker updateChecker) {
+        this.updateChecker = updateChecker;
+        this.warp = warp;
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
@@ -22,33 +28,23 @@ public class WarpCommand implements CommandExecutor {
         }
 
         Player player = (Player) sender;
-        List<String> warpNames = new ArrayList<>();
 
         if (args.length == 0) {
-            warpNames.addAll(Configuration.warpConfiguration.getKeys(false));
-            player.sendMessage(Util.setColoredMessageWithPrefix(warpNames.toString()));
+            List<String> warps = new ArrayList<>(Configuration.warpConfiguration.getKeys(false));
+            if (warps.size() <= 0) {
+                player.sendMessage(Util.setColoredMessageWithPrefix("&4No warp defined."));
+                return true;
+            }
+
+            new InventoryHelper(warp, player, args);
             return true;
         }
 
-        StringBuilder stringBuilder = Util.createStringBuilder(args);
-        String stringBuilderMessage = stringBuilder.toString().strip();
-
-        if (!Configuration.warpConfiguration.contains(stringBuilderMessage)) {
-            player.sendMessage(Util.setColoredMessageWithPrefix("&4There are no warps with that name"));
-            return true;
+        switch (args[0].toLowerCase()) {
+            case "version":
+                player.sendMessage(Util.setColoredMessageWithPrefix("&b" + updateChecker.getUpdateMessage()));
+                break;
         }
-
-
-        ConfigurationSection cs = Configuration.warpConfiguration.getConfigurationSection(stringBuilderMessage);
-        String world = cs.getString("World");
-        double X = cs.getDouble("X");
-        double Y = cs.getDouble("Y");
-        double Z = cs.getDouble("Z");
-        double YAW = cs.getDouble("Yaw");
-        double PITCH = cs.getDouble("Pitch");
-
-        player.teleport(new Location(Bukkit.getWorld(world), X, Y, Z, (float) YAW, (float) PITCH));
-        player.sendMessage(Util.setColoredMessageWithPrefix("Successfully teleported to warp " + stringBuilderMessage));
-        return false;
+        return true;
     }
 }
