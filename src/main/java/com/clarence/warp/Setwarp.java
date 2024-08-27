@@ -23,6 +23,13 @@
             player.sendMessage(Util.setColoredMessageWithPrefix("&4"+ Errors.SETWARP_INVALID_ARUGMENTS));
             return true;
         }
+        int configurationKeysSize = Configuration.warpConfiguration.getKeys(false).size();
+
+        if (configurationKeysSize >= 45) {
+            player.sendMessage(Util.setColoredMessageWithPrefix("&4You cannot add more warps."));
+            return true;
+        }
+
         StringBuilder stringBuilder = Util.createStringBuilder(args);
         String stringBuilderMessage = stringBuilder.toString().strip();
 
@@ -32,6 +39,7 @@
 
         configurationSection.set("Title", "&b&l»»" + stringBuilderMessage);
         configurationSection.set("Description", "&b&l»»»" + stringBuilderMessage);
+        configurationSection.set("Slot", (Configuration.warpConfiguration.getKeys(false).size() - 1));
         configurationSection.set("X", player.getLocation().getX());
         configurationSection.set("Y", player.getLocation().getY());
         configurationSection.set("Z", player.getLocation().getZ());

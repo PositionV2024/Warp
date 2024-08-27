@@ -25,6 +25,12 @@ public class InventoryHelper {
             inventorySize = 9 * 2;
         } else if (configurationKeys.size() <= 27) {
             inventorySize = 9 * 3;
+        } else if (configurationKeys.size() <= 36) {
+            inventorySize = 9 * 4;
+        } else if (configurationKeys.size() <= 45) {
+            inventorySize = 9 * 5;
+        }  else if (configurationKeys.size() <= 54) {
+            inventorySize = 9 * 6;
         }
 
         Inventory inventory = createInventory(inventorySize, inventoryTitle);
@@ -32,7 +38,7 @@ public class InventoryHelper {
         for (int i = 0; i < (configurationKeys.size()); i++) {
             ConfigurationSection configurationSection = Configuration.warpConfiguration.getConfigurationSection(configurationKeys.get(i));
             ItemStack itemStack = createNewItemStack(Material.GOLD_BLOCK, configurationSection.getString("Title"), configurationSection.getString("Description"));
-            inventory.setItem(i, itemStack);
+            inventory.setItem(configurationSection.getInt("Slot"), itemStack);
         }
         player.openInventory(inventory);
     }

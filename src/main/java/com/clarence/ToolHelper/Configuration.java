@@ -18,7 +18,6 @@ public class Configuration {
         System.out.println(Util.getPrefix() + "has successfully hook on to " + getClass().getSimpleName());
 
         warpFile = createFile(warp, "Warps.yml");
-
         warpConfiguration = YamlConfiguration.loadConfiguration(warpFile);
         warpConfiguration.options().header("Inventory size limit is 54");
 
