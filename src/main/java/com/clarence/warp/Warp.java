@@ -14,7 +14,7 @@ public final class Warp extends JavaPlugin {
         updateChecker.logUpdateMessageAsync(getLogger());
 
         new Configuration(this);
-        getCommand("warp").setExecutor(new WarpCommand(this, updateChecker));
+        getCommand("warp").setExecutor(new WarpCommand(updateChecker));
         getCommand("setwarp").setExecutor(new Setwarp());
         getCommand("delwarp").setExecutor(new delwarpCommand());
     }

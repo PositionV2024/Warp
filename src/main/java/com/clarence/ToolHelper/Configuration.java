@@ -20,6 +20,7 @@ public class Configuration {
         warpFile = createFile(warp, "Warps.yml");
 
         warpConfiguration = YamlConfiguration.loadConfiguration(warpFile);
+        warpConfiguration.options().header("Inventory size limit is 54");
 
         saveConfigurationFile(warpConfiguration, warpFile, null);
     }
@@ -48,5 +49,10 @@ public class Configuration {
             return;
         }
         player.sendMessage(Util.setColoredMessageWithPrefix("Saved " + fileName + "."));
+    }
+    public static void loadWarpConfigurationFile(Player player) {
+        warpConfiguration = YamlConfiguration.loadConfiguration(warpFile);
+        saveConfigurationFile(warpConfiguration, warpFile, player);
+        player.sendMessage(Util.setColoredMessageWithPrefix("Successfully reloaded " + warpFile));
     }
 }
