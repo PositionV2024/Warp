@@ -13,9 +13,10 @@ import java.util.List;
 
 public class InventoryHelper {
     public InventoryHelper(Player player) {
-        String inventoryTitle = "Warp";
         int inventorySize = 0;
         StandardMenu inventory = null;
+        String inventoryTitle = Configuration.Configuration.getString("Inventory title");
+
         List<String> configurationKeys = new ArrayList<>(Configuration.warpConfiguration.getKeys(false));
 
         if (configurationKeys.size() <= 9) {
@@ -45,6 +46,7 @@ public class InventoryHelper {
             String itemDescription = configurationSection.getString("Description");
             String itemMaterial = configurationSection.getString("Material");
             String getWorld = configurationSection.getString("World");
+
             double getXLocation = configurationSection.getDouble("X");
             double getYLocation = configurationSection.getDouble("Y");
             double getZLocation = configurationSection.getDouble("Z");

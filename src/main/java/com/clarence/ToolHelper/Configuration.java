@@ -20,14 +20,16 @@ public class Configuration {
         warpFile = createFile(warp, "Warps.yml");
         warpConfiguration = YamlConfiguration.loadConfiguration(warpFile);
 
-        ConfigurationFile = createFile(warp, "Config.yml");
+        ConfigurationFile = createFile(warp, "Configuration.yml");
         Configuration = YamlConfiguration.loadConfiguration(ConfigurationFile);
 
         setBoolToConfiguration(Configuration, "Adjustable inventory size", true);
         setIntToConfiguration(Configuration, "Inventory size",54);
+        setStringToConfiguration(Configuration, "Inventory title", "Warps");
 
         saveConfigurationFile(warpConfiguration, warpFile, null);
         saveConfigurationFile(Configuration, ConfigurationFile, null);
+
     }
 
     public void setBoolToConfiguration(FileConfiguration fileConfiguration, String path, boolean bool) {
@@ -36,6 +38,10 @@ public class Configuration {
     }
     public void setIntToConfiguration(FileConfiguration fileConfiguration, String path, int number) {
         fileConfiguration.addDefault(path, number);
+        fileConfiguration.options().copyDefaults(true);
+    }
+    public void setStringToConfiguration(FileConfiguration fileConfiguration, String path, String title) {
+        fileConfiguration.addDefault(path, title);
         fileConfiguration.options().copyDefaults(true);
     }
     public File createFile(Warp warp, String name) {

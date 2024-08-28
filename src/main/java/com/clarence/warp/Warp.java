@@ -13,9 +13,10 @@ public final class Warp extends JavaPlugin {
         UpdateChecker updateChecker = new UpdateChecker("PositionV2024", "Warp", Bukkit.getPluginManager().getPlugin(this.getName()).getDescription().getVersion());
         updateChecker.checkAsync();
         updateChecker.logUpdateMessageAsync(getLogger());
-        new MenuManager(this);
 
+        new MenuManager(this);
         new Configuration(this);
+
         getCommand("warp").setExecutor(new WarpCommand(this, updateChecker));
         getCommand("setwarp").setExecutor(new Setwarp());
         getCommand("delwarp").setExecutor(new delwarpCommand());
