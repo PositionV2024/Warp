@@ -3,6 +3,7 @@
  import com.clarence.Messages.Errors;
  import com.clarence.ToolHelper.Configuration;
  import com.clarence.ToolHelper.Util;
+ import org.bukkit.Material;
  import org.bukkit.command.Command;
  import org.bukkit.command.CommandExecutor;
  import org.bukkit.command.CommandSender;
@@ -40,6 +41,7 @@
         configurationSection.set("Title", "&b&l»»" + stringBuilderMessage);
         configurationSection.set("Description", "&b&l»»»" + stringBuilderMessage);
         configurationSection.set("Slot", (Configuration.warpConfiguration.getKeys(false).size() - 1));
+        configurationSection.set("Material", Material.GOLD_BLOCK.toString());
         configurationSection.set("X", player.getLocation().getX());
         configurationSection.set("Y", player.getLocation().getY());
         configurationSection.set("Z", player.getLocation().getZ());

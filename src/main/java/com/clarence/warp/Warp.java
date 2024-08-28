@@ -1,6 +1,7 @@
 package com.clarence.warp;
 
 import com.clarence.ToolHelper.Configuration;
+import com.clarence.listener;
 import com.technicjelle.UpdateChecker;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -13,8 +14,10 @@ public final class Warp extends JavaPlugin {
         updateChecker.checkAsync();
         updateChecker.logUpdateMessageAsync(getLogger());
 
+        Bukkit.getPluginManager().registerEvents(new listener(), this);
+
         new Configuration(this);
-        getCommand("warp").setExecutor(new WarpCommand(updateChecker));
+        getCommand("warp").setExecutor(new WarpCommand(this, updateChecker));
         getCommand("setwarp").setExecutor(new Setwarp());
         getCommand("delwarp").setExecutor(new delwarpCommand());
     }

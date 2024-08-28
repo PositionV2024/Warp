@@ -14,10 +14,11 @@ import java.util.List;
 
 public class WarpCommand implements CommandExecutor {
     private UpdateChecker updateChecker = null;
+    private Warp warp;
 
-    public WarpCommand(UpdateChecker updateChecker) {
+    public WarpCommand(Warp warp, UpdateChecker updateChecker) {
         this.updateChecker = updateChecker;
-        System.out.println(Util.getPrefix() + "Get updateChecker from " + WarpCommand.class.getSimpleName());
+        this.warp = warp;
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -36,7 +37,7 @@ public class WarpCommand implements CommandExecutor {
                 return true;
             }
 
-            new InventoryHelper(player);
+            new InventoryHelper(warp, player);
             return true;
         }
 
