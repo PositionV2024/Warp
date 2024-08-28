@@ -9,8 +9,8 @@ import java.io.File;
 import java.io.IOException;
 
 public class Configuration {
-    public static File warpFile = null;
-    public static FileConfiguration warpConfiguration = null;
+    public static File warpFile, ConfigurationFile = null;
+    public static FileConfiguration warpConfiguration, Configuration = null;
 
     public Configuration(Warp warp) {
         if (warp == null) { return; }
@@ -19,11 +19,25 @@ public class Configuration {
 
         warpFile = createFile(warp, "Warps.yml");
         warpConfiguration = YamlConfiguration.loadConfiguration(warpFile);
-        warpConfiguration.options().header("Inventory size limit is 54");
+
+        ConfigurationFile = createFile(warp, "Config.yml");
+        Configuration = YamlConfiguration.loadConfiguration(ConfigurationFile);
+
+        setBoolToConfiguration(Configuration, "Adjustable inventory size", true);
+        setIntToConfiguration(Configuration, "Inventory size",54);
 
         saveConfigurationFile(warpConfiguration, warpFile, null);
+        saveConfigurationFile(Configuration, ConfigurationFile, null);
     }
 
+    public void setBoolToConfiguration(FileConfiguration fileConfiguration, String path, boolean bool) {
+        fileConfiguration.addDefault(path, bool);
+        fileConfiguration.options().copyDefaults(true);
+    }
+    public void setIntToConfiguration(FileConfiguration fileConfiguration, String path, int number) {
+        fileConfiguration.addDefault(path, number);
+        fileConfiguration.options().copyDefaults(true);
+    }
     public File createFile(Warp warp, String name) {
         File file = new File(warp.getDataFolder(), name);
 
@@ -47,11 +61,14 @@ public class Configuration {
         if (player == null) {
             return;
         }
+
         player.sendMessage(Util.setColoredMessageWithPrefix("Saved " + fileName + "."));
     }
-    public static void loadWarpConfigurationFile(Player player) {
+    public static void loadConfigurationFile(Player player) {
         warpConfiguration = YamlConfiguration.loadConfiguration(warpFile);
+        Configuration = YamlConfiguration.loadConfiguration(ConfigurationFile);
+
         saveConfigurationFile(warpConfiguration, warpFile, player);
-        player.sendMessage(Util.setColoredMessageWithPrefix("Successfully reloaded " + warpFile));
+        saveConfigurationFile(Configuration, ConfigurationFile, player);
     }
 }

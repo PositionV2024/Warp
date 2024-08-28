@@ -37,7 +37,7 @@ public class WarpCommand implements CommandExecutor {
                 return true;
             }
 
-            new InventoryHelper(warp, player);
+            new InventoryHelper(player);
             return true;
         }
 
@@ -46,7 +46,7 @@ public class WarpCommand implements CommandExecutor {
                 player.sendMessage(Util.setColoredMessageWithPrefix("&b" + updateChecker.getUpdateMessage()));
                 break;
             case "reload":
-                Configuration.loadWarpConfigurationFile(player);
+                Configuration.loadConfigurationFile(player);
                 break;
         }
         return true;

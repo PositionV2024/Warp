@@ -1,29 +1,21 @@
 package com.clarence.ToolHelper;
 
-import com.clarence.warp.Warp;
+import dev.shreyasayyengar.menuapi.menu.MenuItem;
+import dev.shreyasayyengar.menuapi.menu.StandardMenu;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class InventoryHelper {
-    private final String inventoryTitle = "Warps";
-    public static NamespacedKey key = null;
-    public int inventorySize;
-
-    public InventoryHelper(Warp warp, Player player) {
-        key = createNamespaceKey(warp, "warps");
-
+    public InventoryHelper(Player player) {
+        String inventoryTitle = "Warp";
+        int inventorySize = 0;
+        StandardMenu inventory = null;
         List<String> configurationKeys = new ArrayList<>(Configuration.warpConfiguration.getKeys(false));
 
         if (configurationKeys.size() <= 9) {
@@ -40,35 +32,40 @@ public class InventoryHelper {
             inventorySize = 9 * 6;
         }
 
-        Inventory inventory = createInventory(inventorySize, inventoryTitle);
+        if (Configuration.Configuration.getBoolean("Adjustable inventory size")) {
+            inventory = createInventory(inventorySize, inventoryTitle);
+        } else {
+            inventory = createInventory(Configuration.Configuration.getInt("Inventory size"), inventoryTitle);
+        }
 
         for (int i = 0; i < (configurationKeys.size()); i++) {
             ConfigurationSection configurationSection = Configuration.warpConfiguration.getConfigurationSection(configurationKeys.get(i));
+
             String itemTitle = configurationSection.getString("Title");
             String itemDescription = configurationSection.getString("Description");
             String itemMaterial = configurationSection.getString("Material");
+            String getWorld = configurationSection.getString("World");
+            double getXLocation = configurationSection.getDouble("X");
+            double getYLocation = configurationSection.getDouble("Y");
+            double getZLocation = configurationSection.getDouble("Z");
+            double getYawLocation = configurationSection.getDouble("Yaw");
+            double getPitchLocation = configurationSection.getDouble("Pitch");
+
             int itemSlot = configurationSection.getInt("Slot");
 
-            ItemStack itemStack = createNewItemStack(Material.matchMaterial(String.valueOf(itemMaterial)), itemTitle, itemDescription);
-            inventory.setItem(itemSlot, itemStack);
+            int finalI = i;
+
+            inventory.withItem(itemSlot, new MenuItem(Material.valueOf(itemMaterial)).setName(Util.setColoredMessage(itemTitle))
+                    .setLore(Util.setColoredMessage(itemDescription))
+                    .closeWhenClicked(true)
+                    .onClick((getWhoClicked, WarpItemStack, clickType, event) -> {
+                        getWhoClicked.teleport(new Location(Bukkit.getWorld(getWorld), getXLocation, getYLocation, getZLocation, (float) getYawLocation, (float) getPitchLocation));
+                        getWhoClicked.sendMessage(Util.setColoredMessageWithPrefix("You have been teleported to " + configurationKeys.get(finalI)));
+                    })).open(player);
         }
-        player.openInventory(inventory);
     }
 
-    private Inventory createInventory(int size, String title) {
-        return Bukkit.createInventory(null, size, title);
-    }
-    private ItemStack createNewItemStack(Material material, String displayName, String lore) {
-        ItemStack itemStack = new ItemStack(material);
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setDisplayName(Util.setColoredMessage(displayName));
-        itemMeta.setLore(Collections.singletonList(Util.setColoredMessage(lore)));
-        PersistentDataContainer dataContainer = itemMeta.getPersistentDataContainer();
-        dataContainer.set(key, PersistentDataType.STRING, displayName);
-        itemStack.setItemMeta(itemMeta);
-        return itemStack;
-    }
-    private NamespacedKey createNamespaceKey(Warp warp, String name) {
-        return new NamespacedKey(warp, name);
+    private StandardMenu createInventory(int size, String title) {
+        return new StandardMenu(title, size);
     }
 }
