@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InventoryHelper {
+
     public InventoryHelper(Player player) {
         int inventorySize = 0;
         StandardMenu inventory = null;
