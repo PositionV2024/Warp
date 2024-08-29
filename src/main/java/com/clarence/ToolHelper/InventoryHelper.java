@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class InventoryHelper {
 
@@ -62,8 +63,14 @@ public class InventoryHelper {
                     .setLore(Util.setColoredMessage(itemDescription))
                     .closeWhenClicked(true)
                     .onClick((getWhoClicked, WarpItemStack, clickType, event) -> {
+                        if (!Cooldown.getCooldown().asMap().containsKey(getWhoClicked.getUniqueId())) {
                         getWhoClicked.teleport(new Location(Bukkit.getWorld(getWorld), getXLocation, getYLocation, getZLocation, (float) getYawLocation, (float) getPitchLocation));
                         getWhoClicked.sendMessage(Util.setColoredMessageWithPrefix("You have been teleported to " + configurationKeys.get(finalI)));
+                            Cooldown.getCooldown().asMap().put(getWhoClicked.getUniqueId(), System.currentTimeMillis() + 5000);
+                        } else {
+                            long distance = Cooldown.getCooldown().asMap().get(getWhoClicked.getUniqueId()) - System.currentTimeMillis();
+                            getWhoClicked.sendMessage(Util.setColoredMessageWithPrefix("Your must wait " + TimeUnit.MILLISECONDS.toSeconds(distance) + " to use this again!"));
+                        }
                     })).open(player);
         }
     }
