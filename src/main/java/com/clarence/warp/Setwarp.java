@@ -44,8 +44,8 @@
 
         ConfigurationSection configurationSection = Configuration.warpConfiguration.getConfigurationSection(stringBuilderMessage);
 
-        configurationSection.set("Title", "&b&l»» [" + stringBuilderMessage + "]");
-        configurationSection.set("Description", "&b&l»»» Warp to [" + stringBuilderMessage + "]");
+        configurationSection.set("Title", "&b&l» &f&l[" + stringBuilderMessage.toUpperCase() + "]");
+        configurationSection.set("Description", "&b&l» Teleport to warp &f&l[" + stringBuilderMessage.toUpperCase() + "]");
         configurationSection.set("Slot", (Configuration.warpConfiguration.getKeys(false).size() - 1));
         configurationSection.set("Material", Material.GOLD_BLOCK.toString());
         configurationSection.set("X", player.getLocation().getX());

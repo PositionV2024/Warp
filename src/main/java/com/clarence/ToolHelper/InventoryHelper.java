@@ -6,7 +6,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +24,9 @@ public class InventoryHelper {
         String inventoryTitle = Configuration.Configuration.getString("Inventory title");
 
         List<String> configurationKeys = new ArrayList<>(Configuration.warpConfiguration.getKeys(false));
+        List<String> decorationKeys = new ArrayList<>(Configuration.DecorationConfiguration.getKeys(false));
 
-        if (configurationKeys.size() <= 9) {
+        if (configurationKeys.size() <= 9 || decorationKeys.isEmpty()) {
             inventorySize = 9;
         } else if (configurationKeys.size() <= 18) {
             inventorySize = 9 * 2;
@@ -39,6 +44,19 @@ public class InventoryHelper {
             inventory = createInventory(inventorySize, inventoryTitle);
         } else {
             inventory = createInventory(Configuration.Configuration.getInt("Inventory size"), inventoryTitle);
+        }
+        List<String> itemsConfigurationKeys = new ArrayList<>(Configuration.DecorationConfiguration.getKeys(false));
+
+        for (int i = 0; i < itemsConfigurationKeys.size(); i++) {
+            String name = itemsConfigurationKeys.get(i);
+
+            ConfigurationSection configurationSection = Configuration.DecorationConfiguration.getConfigurationSection(name);
+
+            ItemStack itemStack = getItemStack(Configuration.DecorationConfiguration, name);
+
+            int inventorySlot = configurationSection.getInt("slot");
+
+            inventory.withItem(inventorySlot, new MenuItem(itemStack));
         }
 
 
@@ -84,5 +102,21 @@ public class InventoryHelper {
 
     private StandardMenu createInventory(int size, String title) {
         return new StandardMenu(title, size);
+    }
+
+    public static ItemStack getItemStack(FileConfiguration configuration, String key) {
+        ItemStack is = new ItemStack(Material.valueOf(configuration.getString(key + ".item").toUpperCase()), configuration.getInt(key + ".amount"));
+        ItemMeta meta = is.getItemMeta();
+        meta.setDisplayName(Util.setColoredMessage(configuration.getString(key + ".name")));
+        meta.setLore(configuration.getStringList(key + ".lore"));
+        is.setItemMeta(meta);
+        ConfigurationSection enchantsSection = configuration.getConfigurationSection(key + ".enchants");
+        enchantsSection.getKeys(false).forEach(s -> {
+            String enchantType = enchantsSection.getString(s + ".type").toUpperCase();
+            int level = enchantsSection.getInt(s + ".level");
+            Enchantment enchant = Enchants.valueOf(enchantType).getEnchant();
+            is.addUnsafeEnchantment(enchant, level);
+        });
+        return is;
     }
 }
