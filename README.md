@@ -7,6 +7,4 @@
 ### Reload
 I know it is troublesome to reload the whole server just to reload the plugin itself. With this plugin, you do not have to worry about that. Just simply type /warp reload.
 
-#Command
-
 ### Developed by Clarence
