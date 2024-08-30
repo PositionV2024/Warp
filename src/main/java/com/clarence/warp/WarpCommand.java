@@ -9,9 +9,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class WarpCommand implements CommandExecutor {
     private UpdateChecker updateChecker = null;
     private Warp warp;
@@ -30,13 +27,6 @@ public class WarpCommand implements CommandExecutor {
         Player player = (Player) sender;
 
         if (args.length == 0) {
-            List<String> configurationKeys = new ArrayList<>(Configuration.warpConfiguration.getKeys(false));
-
-            if (configurationKeys.size() <= 0) {
-                player.sendMessage(Util.setColoredMessageWithPrefix("&4No warp defined."));
-                return true;
-            }
-
             new InventoryHelper(player);
             return true;
         }

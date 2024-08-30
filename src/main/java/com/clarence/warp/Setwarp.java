@@ -1,6 +1,7 @@
  package com.clarence.warp;
 
  import com.clarence.Messages.Errors;
+ import com.clarence.Permission;
  import com.clarence.ToolHelper.Configuration;
  import com.clarence.ToolHelper.Util;
  import org.bukkit.Material;
@@ -28,6 +29,11 @@
 
         if (configurationKeysSize >= 45) {
             player.sendMessage(Util.setColoredMessageWithPrefix("&4You cannot add more warps."));
+            return true;
+        }
+
+        if (!player.hasPermission(Permission.USEAGE.getPermissionNode())) {
+            player.sendMessage(Util.setColoredMessageWithPrefix("&4You cannot use this."));
             return true;
         }
 

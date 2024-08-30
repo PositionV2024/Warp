@@ -7,8 +7,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class Cooldown {
-    private static final long duration = 5;
-    private static final Cache<UUID, Long> cooldown = CacheBuilder.newBuilder().expireAfterWrite(duration, TimeUnit.SECONDS).build();
+    private static final Cache<UUID, Long> cooldown = CacheBuilder.newBuilder().expireAfterWrite(Configuration.Configuration.getLong("Cooldown (reload the server to apply charges)"), TimeUnit.SECONDS).build();
     public static Cache<UUID, Long> getCooldown() {
         return cooldown;
     }

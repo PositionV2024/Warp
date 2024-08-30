@@ -41,6 +41,7 @@ public class InventoryHelper {
             inventory = createInventory(Configuration.Configuration.getInt("Inventory size"), inventoryTitle);
         }
 
+
         for (int i = 0; i < (configurationKeys.size()); i++) {
             ConfigurationSection configurationSection = Configuration.warpConfiguration.getConfigurationSection(configurationKeys.get(i));
 
@@ -55,23 +56,29 @@ public class InventoryHelper {
             double getYawLocation = configurationSection.getDouble("Yaw");
             double getPitchLocation = configurationSection.getDouble("Pitch");
 
-            int itemSlot = configurationSection.getInt("Slot");
-
+            int itemSlot1 = 0;
             int finalI = i;
 
-            inventory.withItem(itemSlot, new MenuItem(Material.valueOf(itemMaterial)).setName(Util.setColoredMessage(itemTitle))
+            if (!Configuration.Configuration.getBoolean("Adjustable inventory size")) {
+                itemSlot1 = configurationSection.getInt("Slot");
+            } else {
+                itemSlot1 = i;
+            }
+
+            inventory.withItem(itemSlot1, new MenuItem(Material.matchMaterial(itemMaterial)).setName(Util.setColoredMessage(itemTitle))
                     .setLore(Util.setColoredMessage(itemDescription))
                     .closeWhenClicked(true)
                     .onClick((getWhoClicked, WarpItemStack, clickType, event) -> {
                         if (!Cooldown.getCooldown().asMap().containsKey(getWhoClicked.getUniqueId())) {
-                        getWhoClicked.teleport(new Location(Bukkit.getWorld(getWorld), getXLocation, getYLocation, getZLocation, (float) getYawLocation, (float) getPitchLocation));
-                        getWhoClicked.sendMessage(Util.setColoredMessageWithPrefix("You have been teleported to " + configurationKeys.get(finalI)));
-                            Cooldown.getCooldown().asMap().put(getWhoClicked.getUniqueId(), System.currentTimeMillis() + 5000);
+                            getWhoClicked.teleport(new Location(Bukkit.getWorld(getWorld), getXLocation, getYLocation, getZLocation, (float) getYawLocation, (float) getPitchLocation));
+                            getWhoClicked.sendMessage(Util.setColoredMessageWithPrefix("You have been teleported to " + configurationKeys.get(finalI)));
+                            Cooldown.getCooldown().asMap().put(getWhoClicked.getUniqueId(), System.currentTimeMillis() + Configuration.Configuration.getLong("Cooldown (reload the server to apply charges)") * 1000);
                         } else {
                             long distance = Cooldown.getCooldown().asMap().get(getWhoClicked.getUniqueId()) - System.currentTimeMillis();
-                            getWhoClicked.sendMessage(Util.setColoredMessageWithPrefix("Your must wait " + TimeUnit.MILLISECONDS.toSeconds(distance) + " to use this again!"));
+                            getWhoClicked.sendMessage(Util.setColoredMessageWithPrefix("&4You must wait " + TimeUnit.MILLISECONDS.toSeconds(distance) + " to use this again!"));
                         }
-                    })).open(player);
+                    })).cancelClickEventsByDefault(true)
+                    .open(player);
         }
     }
 

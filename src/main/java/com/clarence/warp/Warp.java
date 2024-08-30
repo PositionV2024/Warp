@@ -11,8 +11,6 @@ public final class Warp extends JavaPlugin {
     @Override
     public void onEnable() {
         UpdateChecker updateChecker = new UpdateChecker("PositionV2024", "Warp", Bukkit.getPluginManager().getPlugin(this.getName()).getDescription().getVersion());
-        updateChecker.checkAsync();
-        updateChecker.logUpdateMessageAsync(getLogger());
 
         new MenuManager(this);
         new Configuration(this);
