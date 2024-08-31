@@ -9,7 +9,6 @@ It is troublesome to reload the whole server just to reload the plugin itself. W
 ## GUI layout customizable
 With this plugin, you are able to produce and customize items in your items.yml file.
 
-GUI Layout one
 ```
 GLASS_PANE: # irgendein name
   item: GLASS_PANE # item
