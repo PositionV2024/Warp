@@ -6,10 +6,10 @@
 ## Features
 ### Reload
 It is troublesome to reload the whole server just to reload the plugin itself. With this plugin, you do not have to worry about that. Just simply type /warp reload, and it will reload all the files.
-### GUI layout customizable
-With this plugin, you are able to produce and customize items in your items.yml file.
+### More customizable options
+Ever feel the struggle of not being able to customize your plugins to your liking? This plugin is for you. With this plugin, you can change the way that your GUI look and feel.
 
-GUI layout example
+GUI layout example (Put this in your items.yml file and the decoration items will be added into your menu)
 ```
 GLASS_PANE: # irgendein name
   item: GLASS_PANE # item
