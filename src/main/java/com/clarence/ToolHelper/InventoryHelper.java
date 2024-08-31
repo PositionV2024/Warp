@@ -2,8 +2,6 @@ package com.clarence.ToolHelper;
 
 import dev.shreyasayyengar.menuapi.menu.MenuItem;
 import dev.shreyasayyengar.menuapi.menu.StandardMenu;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -14,19 +12,16 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class InventoryHelper {
-
     public InventoryHelper(Player player) {
         int inventorySize = 0;
         StandardMenu inventory = null;
         String inventoryTitle = Configuration.Configuration.getString("Inventory title");
 
         List<String> configurationKeys = new ArrayList<>(Configuration.warpConfiguration.getKeys(false));
-        List<String> decorationKeys = new ArrayList<>(Configuration.DecorationConfiguration.getKeys(false));
 
-        if (configurationKeys.size() <= 9 || decorationKeys.isEmpty()) {
+        if (configurationKeys.size() <= 9) {
             inventorySize = 9;
         } else if (configurationKeys.size() <= 18) {
             inventorySize = 9 * 2;
@@ -47,18 +42,20 @@ public class InventoryHelper {
         }
         List<String> itemsConfigurationKeys = new ArrayList<>(Configuration.DecorationConfiguration.getKeys(false));
 
-        for (int i = 0; i < itemsConfigurationKeys.size(); i++) {
-            String name = itemsConfigurationKeys.get(i);
+        if (!Configuration.Configuration.getBoolean("Adjustable inventory size")) {
+            for (int i = 0; i < itemsConfigurationKeys.size(); i++) {
 
-            ConfigurationSection configurationSection = Configuration.DecorationConfiguration.getConfigurationSection(name);
+                String name = itemsConfigurationKeys.get(i);
 
-            ItemStack itemStack = getItemStack(Configuration.DecorationConfiguration, name);
+                ConfigurationSection configurationSection = Configuration.DecorationConfiguration.getConfigurationSection(name);
 
-            int inventorySlot = configurationSection.getInt("slot");
+                ItemStack itemStack = getItemStack(Configuration.DecorationConfiguration, name);
 
-            inventory.withItem(inventorySlot, new MenuItem(itemStack));
+                int inventorySlot = configurationSection.getInt("slot");
+
+                inventory.withItem(inventorySlot, new MenuItem(itemStack));
+            }
         }
-
 
         for (int i = 0; i < (configurationKeys.size()); i++) {
             ConfigurationSection configurationSection = Configuration.warpConfiguration.getConfigurationSection(configurationKeys.get(i));
@@ -87,14 +84,7 @@ public class InventoryHelper {
                     .setLore(Util.setColoredMessage(itemDescription))
                     .closeWhenClicked(true)
                     .onClick((getWhoClicked, WarpItemStack, clickType, event) -> {
-                        if (!Cooldown.getCooldown().asMap().containsKey(getWhoClicked.getUniqueId())) {
-                            getWhoClicked.teleport(new Location(Bukkit.getWorld(getWorld), getXLocation, getYLocation, getZLocation, (float) getYawLocation, (float) getPitchLocation));
-                            getWhoClicked.sendMessage(Util.setColoredMessageWithPrefix("You have been teleported to " + configurationKeys.get(finalI)));
-                            Cooldown.getCooldown().asMap().put(getWhoClicked.getUniqueId(), System.currentTimeMillis() + Configuration.Configuration.getLong("Cooldown (reload the server to apply charges)") * 1000);
-                        } else {
-                            long distance = Cooldown.getCooldown().asMap().get(getWhoClicked.getUniqueId()) - System.currentTimeMillis();
-                            getWhoClicked.sendMessage(Util.setColoredMessageWithPrefix("&4You must wait " + TimeUnit.MILLISECONDS.toSeconds(distance) + " to use this again!"));
-                        }
+                        Util.teleportToDestination(getWorld, getXLocation, getYLocation, getZLocation, (float) getYawLocation, (float) getPitchLocation, player);
                     })).cancelClickEventsByDefault(true)
                     .open(player);
         }

@@ -31,7 +31,6 @@ public class Configuration {
         setStringToConfiguration(Configuration, "Inventory title", "Warps");
         setIntToConfiguration(Configuration, "Cooldown (reload the server to apply charges)", 4);
 
-        saveConfigurationFile(warpConfiguration, warpFile, null);
         saveConfigurationFile(Configuration, ConfigurationFile, null);
         saveConfigurationFile(DecorationConfiguration, DecorationFile, null);
     }
@@ -73,7 +72,7 @@ public class Configuration {
             return;
         }
 
-        player.sendMessage(Util.setColoredMessageWithPrefix("Saved " + fileName + "."));
+        player.sendMessage(Util.setColoredMessageWithPrefix("&lSaved " + fileName + "."));
     }
     public static void loadConfigurationFile(Player player) {
         warpConfiguration = YamlConfiguration.loadConfiguration(warpFile);

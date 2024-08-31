@@ -27,7 +27,7 @@
         }
         int configurationKeysSize = Configuration.warpConfiguration.getKeys(false).size();
 
-        if (configurationKeysSize >= 45) {
+        if (configurationKeysSize == 54) {
             player.sendMessage(Util.setColoredMessageWithPrefix("&4You cannot add more warps."));
             return true;
         }
@@ -56,7 +56,7 @@
         configurationSection.set("World", player.getLocation().getWorld().getName());
 
         Configuration.saveConfigurationFile(Configuration.warpConfiguration, Configuration.warpFile, player);
-        player.sendMessage(Util.setColoredMessageWithPrefix("&2Successfully created: " + stringBuilderMessage + " warp."));
+        player.sendMessage(Util.setColoredMessageWithPrefix("&lSuccessfully created: " + stringBuilderMessage + " warp."));
 
         return true;
     }
