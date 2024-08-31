@@ -9,7 +9,7 @@ It is troublesome to reload the whole server just to reload the plugin itself. W
 ### More customizable options
 Ever feel the struggle of not being able to customize your plugins to your liking? This plugin is for you. With this plugin, you can change the way that your GUI look and feel.
 
-GUI layout example (Put this in your items.yml file and the decoration items will be added into your menu
+GUI layout example (Put this in your items.yml file and the decoration items will be added into your menu)
 ```
 GLASS_PANE: # irgendein name
   item: GLASS_PANE # item
